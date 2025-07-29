@@ -1,0 +1,43 @@
+export interface Product {
+  id: string;
+  name: string;
+  category: string;
+  unit: string;
+  initialStock: number;
+  currentStock: number;
+  price: number;
+  createdAt: string;
+}
+
+export interface Customer {
+  name: string;
+  phone: string;
+}
+
+export interface InvoiceItem {
+  productId: string;
+  productName: string;
+  quantity: number;
+  price: number;
+  total: number;
+}
+
+export interface Invoice {
+  id: string;
+  customer: Customer;
+  items: InvoiceItem[];
+  totalAmount: number;
+  createdAt: string;
+}
+
+export interface StockTransaction {
+  id: string;
+  productId: string;
+  productName: string;
+  quantity: number;
+  type: 'in' | 'out';
+  source?: string;
+  reason?: string;
+  remarks?: string;
+  createdAt: string;
+}
