@@ -1,10 +1,10 @@
 export interface Product {
-  id: string;
+  _id: string;
   name: string;
   category: string;
   unit: string;
   initialStock: number;
-  currentStock: number;
+  stock: number;
   price: number;
   createdAt: string;
 }
@@ -41,3 +41,21 @@ export interface StockTransaction {
   remarks?: string;
   createdAt: string;
 }
+
+ export type StockInputs={
+    category: string;
+    productId: string;
+    quantity: string;
+    source: string;
+    remarks: string;
+    product:string,
+    currentStock:number
+}
+export type SearchOutput={
+    category: string;
+    productId: string;
+    quantity: string;
+    name:string
+}
+
+export type StockFields='category'|'productId'|'quantity'|'source'|'remarks'|'product'

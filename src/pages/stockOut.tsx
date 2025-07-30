@@ -23,9 +23,9 @@ export const StockOutPage: React.FC<{
     if (!formData.reason.trim()) newErrors.reason = 'Reason is required';
     
     // Check if sufficient stock
-    const product = products.find(p => p.id === formData.productId);
-    if (product && formData.quantity && parseInt(formData.quantity) > product.currentStock) {
-      newErrors.quantity = `Insufficient stock. Available: ${product.currentStock}`;
+    const product = products.find(p => p._id === formData.productId);
+    if (product && formData.quantity && parseInt(formData.quantity) > product.stock) {
+      newErrors.quantity = `Insufficient stock. Available: ${product.stock}`;
     }
     
     setErrors(newErrors);
@@ -36,10 +36,10 @@ export const StockOutPage: React.FC<{
     e.preventDefault();
     
     if (validateForm()) {
-      const product = products.find(p => p.id === formData.productId);
+      const product = products.find(p => p._id === formData.productId);
       if (product) {
         const quantity = parseInt(formData.quantity);
-        const newStock = product.currentStock - quantity;
+        const newStock = product.stock - quantity;
         
         onUpdateStock(formData.productId, newStock);
         onAddTransaction({
@@ -79,8 +79,8 @@ export const StockOutPage: React.FC<{
               >
                 <option value="">Select product</option>
                 {products.map(product => (
-                  <option key={product.id} value={product.id}>
-                    {product.name} (Current Stock: {product.currentStock})
+                  <option key={product._id} value={product._id}>
+                    {product.name} (Current Stock: {product.stock})
                   </option>
                 ))}
               </select>

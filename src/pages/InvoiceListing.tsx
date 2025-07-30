@@ -15,7 +15,7 @@ export const InvoicesPage: React.FC<{
     if (confirm(`Are you sure you want to delete invoice #${invoice.id.slice(-6)}? This will restore the stock.`)) {
       // Restore stock
       invoice.items.forEach(item => {
-        const product = products.find(p => p.id === item.productId);
+        const product = products.find(p => p._id === item.productId);
         if (product) {
           onUpdateStock(item.productId, product.currentStock + item.quantity);
         }
