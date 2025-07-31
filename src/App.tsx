@@ -1,8 +1,8 @@
 import { useState } from "react";
 import type { Invoice, Product, StockTransaction } from "./types/type";
 import { DashboardPage } from "./pages/Dashboard";
-import { InvoicesPage } from "./pages/InvoiceListing";
-import { InvoicePage } from "./pages/inoviceCreaion/InvoiceCreation";
+import { InvoicesPage } from "./pages/invoiceList/InvoiceListing";
+import { InvoicePage } from "./pages/inoviceCreaion/InvoiceCreation"; 
 import { ProductsPage } from "./pages/ProductManagement";
 import { StockInPage } from "./pages/stockIn/StockIn";
 import { StockOutPage } from "./pages/stockOut";
@@ -16,7 +16,7 @@ export const App2 = () => {
   const createInvoice = (invoiceData: Omit<Invoice, "id" | "createdAt">) => {
     const newInvoice: Invoice = {
       ...invoiceData,
-      id: Date.now().toString(),
+      _id: Date.now().toString(),
       createdAt: new Date().toISOString(),
     };
     setInvoices([...invoices, newInvoice]);
@@ -31,7 +31,7 @@ export const App2 = () => {
     );
   };
   const deleteInvoice = (invoiceId: string) => {
-    setInvoices(invoices.filter((invoice) => invoice.id !== invoiceId));
+    setInvoices(invoices.filter((invoice) => invoice._id !== invoiceId));
   };
   const addTransaction = (
     transactionData: Omit<StockTransaction, "id" | "createdAt">

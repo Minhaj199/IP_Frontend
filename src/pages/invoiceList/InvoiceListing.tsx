@@ -1,35 +1,37 @@
 import { useState } from "react";
-import type { Invoice, Product } from "../types/type";
+import type { Invoice, Product } from "../../types/type";
 import { FileText, Search, Trash2 } from "lucide-react";
-import { Navigation } from "../components/navigation";
+import { Navigation } from "../../components/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { fetchData } from "./operations";
+import { Pagination } from "@mui/material";
 
-export const InvoicesPage: React.FC<{ 
-  invoices: Invoice[]; 
-  products: Product[];
-  onDeleteInvoice: (invoiceId: string) => void;
-  onUpdateStock: (productId: string, newStock: number) => void;
+export const InvoicesPage: React.FC<{ invoices: Invoice[]; products: Product[];onDeleteInvoice: (invoiceId: string) => void;onUpdateStock: (productId: string, newStock: number) => void;
 }> = ({ invoices, products, onDeleteInvoice, onUpdateStock }) => {
   const [searchTerm, setSearchTerm] = useState('');
-
+const [page,setPage]=useState(1)
+const limit=5
   const handleDeleteInvoice = (invoice: Invoice) => {
-    if (confirm(`Are you sure you want to delete invoice #${invoice.id.slice(-6)}? This will restore the stock.`)) {
+    if (confirm(`Are you sure you want to delete invoice #${invoice._id.slice(-6)}? This will restore the stock.`)) {
       // Restore stock
       invoice.items.forEach(item => {
         const product = products.find(p => p._id === item.productId);
         if (product) {
-          onUpdateStock(item.productId, product.currentStock + item.quantity);
+          onUpdateStock(item.productId, product.stock + item.quantity);
         }
       });
       
-      onDeleteInvoice(invoice.id);
+      onDeleteInvoice(invoice._id);
     }
   };
+    const { data} = useQuery<
+    { invoices: Invoice[]; totalCount: number },Error
+  >({
+    queryKey: ["products", page],
+    queryFn: () => fetchData(limit,page),
+  });
 
-  const filteredInvoices = invoices.filter(invoice =>
-    invoice.customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    invoice.id.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
+const totalPage=Math.ceil((data?.totalCount||0)/limit)
   return (
     <>
     <Navigation currentPage="invoices"/>
@@ -69,10 +71,10 @@ export const InvoicesPage: React.FC<{
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {filteredInvoices.map((invoice) => (
-                  <tr key={invoice.id} className="hover:bg-gray-50">
+                {data?.invoices.map((invoice) => (
+                  <tr key={invoice._id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="font-medium text-gray-900">#{invoice.id.slice(-6)}</div>
+                      <div className="font-medium text-gray-900">{invoice._id}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="font-medium text-gray-900">{invoice.customer.name}</div>
@@ -80,7 +82,7 @@ export const InvoicesPage: React.FC<{
                     <td className="px-6 py-4 whitespace-nowrap text-gray-500">{invoice.customer.phone}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-gray-500">{invoice.items.length} items</td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="font-medium text-green-600">₹{invoice.totalAmount.toLocaleString()}</div>
+                      <div className="font-medium text-green-600">₹{invoice.totalAmount?.toLocaleString()}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-gray-500">
                       {new Date(invoice.createdAt).toLocaleDateString()}
@@ -99,7 +101,7 @@ export const InvoicesPage: React.FC<{
             </table>
           </div>
           
-          {filteredInvoices.length === 0 && (
+          {data?.invoices.length === 0 && (
             <div className="text-center py-8 text-gray-500">
               <FileText className="w-12 h-12 mx-auto mb-2 opacity-50" />
               <p>No invoices found.</p>
@@ -107,7 +109,17 @@ export const InvoicesPage: React.FC<{
           )}
         </div>
       </div>
+       <div className="w-full pb-6 mt-9 flex justify-center items-center">
+              <Pagination
+                onChange={(_e, value) => setPage(value)}
+                count={totalPage}
+                page={page}
+                variant="outlined"
+                color="primary"
+              />
+            </div>
     </div>
+   
     </>
   );
 };

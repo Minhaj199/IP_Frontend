@@ -25,7 +25,7 @@ export interface InvoiceItem {
 }
 
 export interface Invoice {
-  id: string;
+  _id: string;
   customer: Customer;
   items: InvoiceItem[];
   totalAmount: number;
