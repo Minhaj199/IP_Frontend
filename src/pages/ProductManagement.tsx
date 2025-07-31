@@ -324,7 +324,7 @@ export const ProductsPage: react.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {data?.products.map((product) => (
+                  {Array.isArray(data?.products)&&data?.products.map((product) => (
                     <tr key={product._id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="font-medium text-gray-900">

@@ -1,109 +1,115 @@
-import {
-  useEffect,
-  useReducer,
-  useRef,
-  useState,
-  type ChangeEvent,
-} from "react";
-import type {
-  Product,
-  StockFields,
-  StockTransaction,
-  SearchOutput,
-  StockInputs,
-} from "../../types/type";
+import { useEffect,  useState } from "react";
+import type { Product, StockFields, StockInputs } from "../../types/type";
 import { Navigation } from "../../components/navigation";
-import { fetchProduct, handleSubmit } from "./operation";
-import { debounce } from "lodash";
+import {  handleSubmit } from "./operation";
+
+
 import { request } from "../../utils/axiosInterceptor";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../components/ui/select";
 
 export const StockInPage: React.FC = () => {
-  const [formData, setFormData] = useState<StockInputs>({category: "",productId: "",quantity: "",source: "",remarks: "",product:'',currentStock:0,
+  const [formData, setFormData] = useState<StockInputs>({
+    category: "",
+    productId: "",
+    quantity: "",
+    source: "",
+    remarks: "",
+    product: "",
+    currentStock: 0,
   });
   const [products, setProducts] = useState<Product[]>([]);
-
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const debounceSearch = useRef(
-    debounce(
-      (parms: { id: string; field: string }) =>
-        fetchProduct(parms.id, parms.field),
-      500
-    )
-  ).current;
+
 
   useEffect(() => {
     async function fetchPrductName() {
       try {
-        const result: Product[]  = await request({
+        const result: Product[] = await request({
           url: "/api/fetch-productsdata",
         });
         if (result.length) {
           setProducts(result);
-          setFormData(prev=>({...prev,}))
         }
+        setFormData((prev) => ({ ...prev }));
+       
+        console.log(products);
       } catch (error) {}
     }
     fetchPrductName();
-  },[]);
-////////////// input handling////////
-  const handleInputChange = async (field: StockFields,e: ChangeEvent<HTMLInputElement|HTMLSelectElement>
+  }, []);
+ 
+  ////////////// input handling////////
+  const handleInputChange = async (
+    field: StockFields,
+    value: string | number
   ) => {
-   let updatedData=({...formData,[field]:e.target.value})
-    console.log(field)
-    console.log(e.target.value)
+    let updatedData = { ...formData, [field]: value };
+
     if (field === "productId") {
-      const data=products.find(elm=>{
-        return elm
-      })
-      // console.log(data)
-      if(data){
-        updatedData={
-          category: data.category,productId: data._id,quantity: "",source: "",remarks: "",product:data.name,currentStock:data.stock
-        }
-      }else{}
-      setFormData({...updatedData})
-    }else if(field==='category'){
-      const data=products.find((el)=>el.category.toLocaleLowerCase()===e.target.value.toLocaleLowerCase())
-      if(data){
-        updatedData={
-          category: data.category,productId: data._id,quantity: "",source: "",remarks: "",product:data.name,currentStock:data.stock
-        }
+    
+      const data = products.find((elm) => {
+        return elm._id===value;
+      });
+      console.log(data)
+      if (data) {
+        updatedData = {
+          category: data.category,
+          productId: data._id,
+          quantity: "",
+          source: "",
+          remarks: "",
+          product: data.name,
+          currentStock: data.stock,
+        };
+      } else {
       }
-    }else if(field==='product'){
-      const data=products.find((el)=>el.name.toLocaleLowerCase()===e.target.value.toLocaleLowerCase())
-      if(data){
-        updatedData={
-          category: data.category,productId: data._id,quantity: "",source: "",remarks: "",product:data.name,currentStock:data.stock
-        }
+      console.log(updatedData)
+      setFormData({ ...updatedData });
+    } else if (field === "category" && typeof value === "string") {
+    
+      const data = products.find(
+        (el) => el.category.toLocaleLowerCase() === value.toLocaleLowerCase()
+      );
+      if (data) {
+        updatedData = {
+          category: data.category,
+          productId: data._id,
+          quantity: "",
+          source: "",
+          remarks: "",
+          product: data.name,
+          currentStock: data.stock,
+        };
       }
+      setFormData({ ...updatedData });
+    } else if (field === "product" && typeof value === "string") {
+  
+      const data = products.find((el)=>{
+      return el.name.toLocaleLowerCase() === value.toLocaleLowerCase()
+      });
+    
+      
+      if (data) {
+        updatedData = {
+          category: data.category,
+          productId: data._id,
+          quantity: "",
+          source: "",
+          remarks: "",
+          product: data.name,
+          currentStock: data.stock,
+        };
+      }
+      setFormData({ ...updatedData })
     }
   };
 
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-
-  //   if (validateForm()) {
-  //     const product = products.find(p => p.id === formData.productId);
-  //     if (product) {
-  //       const quantity = parseInt(formData.quantity);
-  //       const newStock = product.currentStock + quantity;
-
-  //       onUpdateStock(formData.productId, newStock);
-  //       onAddTransaction({
-  //         productId: formData.productId,
-  //         productName: product.name,
-  //         quantity,
-  //         type: 'in',
-  //         source: formData.source,
-  //         remarks: formData.remarks
-  //       });
-
-  //       setFormData({ productId: '', quantity: '', source: '', remarks: '',category:''});
-  //       setErrors({});
-  //       alert('Stock updated successfully!');
-  //     }
-  //   }
-  // };
 
   return (
     <>
@@ -127,27 +133,27 @@ export const StockInPage: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Product id
                 </label>
-                <select
+                <Select
                   value={formData.productId}
-                  onChange={(e) =>
-                   handleInputChange('productId',e)
-                  }
-                  className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                    errors.typeId ? "border-red-500" : "border-gray-300"
-                  }`}
+                  onValueChange={(e) => handleInputChange("productId", e)}
                 >
-                  <option key='' value=''>Id</option>
-                  {products?.map(el=>{
-                    // console.log(el._id)
-                    return (
-                      
-                      <option key={el._id} value={el._id}>{el._id}</option>
-                     
-                  )
-
-                  })}
-                  
-                </select>
+                  <SelectTrigger
+                    className={`w-full px-2 py-6 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                      errors.typeId ? "border-red-500" : "border-gray-300"
+                    }`}
+                  >
+                    <SelectValue placeholder="Product" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {products?.map((el) => {
+                      return (
+                        <SelectItem key={el._id} value={el._id}>
+                          {el._id}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
                 {errors.typeId && (
                   <p className="text-red-500 text-sm mt-1">
                     {errors.productId}
@@ -159,20 +165,23 @@ export const StockInPage: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   category
                 </label>
-                <select
+                <Select
                   value={formData.category}
-                  onChange={(e) =>
-                    handleInputChange('category',e)
-                  }
-                  className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                    errors.typeId ? "border-red-500" : "border-gray-300"
-                  }`}>
-                  <option value="">category</option>
-
-                  <option value="Notebook">Notebook</option>
-                  <option value="Pencil">Pencil</option>
-                  <option value="Pen">Pen</option>
-                </select>
+                  onValueChange={(e) => handleInputChange("category", e)}
+                >
+                  <SelectTrigger
+                    className={`w-full px-2 py-6 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                      errors.typeId ? "border-red-500" : "border-gray-300"
+                    }`}
+                  >
+                    <SelectValue placeholder="Category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Notebook">Notebook</SelectItem>
+                    <SelectItem value="Pencil">Pencil</SelectItem>
+                    <SelectItem value="Pen">Pen</SelectItem>
+                  </SelectContent>
+                </Select>
                 {errors.typeId && (
                   <p className="text-red-500 text-sm mt-1">
                     {errors.productId}
@@ -184,28 +193,27 @@ export const StockInPage: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Product
                 </label>
-                <select
+                <Select
                   value={formData.product}
-                  onChange={(e) =>
-                    handleInputChange("product",e)
-                  }
-                  className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                    errors.productId ? "border-red-500" : "border-gray-300"
-                  }`}
+                  onValueChange={(e) => handleInputChange("product", e)}
                 >
-                  <option value="">Select product</option>
-                  {products.map(
-                    (product: {
-                      _id: string;
-                      name: string;
-                      stock: number;
-                    }) => (
-                      <option key={product._id} value={formData.product}>
-                        {product.name} (Current Stock: {product.stock})
-                      </option>
-                    )
-                  )}
-                </select>
+                  <SelectTrigger
+                    className={`w-full px-2 py-6 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                      errors.typeId ? "border-red-500" : "border-gray-300"
+                    }`}
+                  >
+                    <SelectValue placeholder="products" />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    {products?.map((product) => (
+                      <SelectItem key={product._id} value={product.name}>
+                        {`${product.name} stock: (${product.stock})`}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
                 {errors.productId && (
                   <p className="text-red-500 text-sm mt-1">
                     {errors.productId}
@@ -287,8 +295,8 @@ export const StockInPage: React.FC = () => {
                       source: "",
                       remarks: "",
                       category: "",
-                      currentStock:0,
-                      product:''
+                      currentStock: 0,
+                      product: "",
                     });
                     setErrors({});
                   }}

@@ -12,9 +12,9 @@ import { Plus, ShoppingCart, Trash2 } from "lucide-react";
 import { Navigation } from "../../components/navigation";
 import { enqueueSnackbar } from "notistack";
 
-import { fetchProduct, fetchStock, submitInvoice } from "../inoviceCreaion/operations";
+import { fetchProduct, submitInvoice } from "../inoviceCreaion/operations";
 
-export const InvoicePage: React.FC<{products: Product[];onCreateInvoice: (invoice: Omit<Invoice, "id" | "createdAt">) => void;onUpdateStock: (productId: string, newStock: number) => void;}> = ({ onCreateInvoice }) => {
+export const InvoicePage: React.FC<{products: Product[];onCreateInvoice: (invoice: Omit<Invoice, "id" | "createdAt">) => void;onUpdateStock: (productId: string, newStock: number) => void;}> = () => {
   const [customer, setCustomer] = useState({ name: "", phone: "" });
   const [selectedItems, setSelectedItems] = useState<InvoiceItem[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
