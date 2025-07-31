@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Invoice } from "../../types/type";
-import { FileText, Search, Trash2 } from "lucide-react";
+import { FileText,  Trash2 } from "lucide-react";
 import { Navigation } from "../../components/Navigation"; 
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "./operations";
@@ -20,7 +20,6 @@ import { enqueueSnackbar } from "notistack";
 import LoadingSpinner from "../../components/Spinner";
 
 export const InvoicesPage: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const [invoiceID, setInvoiceId] = useState<string|null>();
   const limit = 5;
