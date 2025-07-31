@@ -38,6 +38,8 @@ client.interceptors.response.use(
       }
     }
     if (!error?.response?.data?.success) {
+   
+
       throw {
         message: error.response.data.message,
         errorType: error.response.data.errorType,
@@ -53,7 +55,10 @@ export const request = async <T>(options: AxiosRequestConfig): Promise<T> => {
   try {
     return await client(options);
   } catch (error: any) {
+ 
     if ("errorType" in error) {
+ 
+
       throw new AppError(error.message, error.errorType, error.result).toJSON()
     } else {
       throw new Error("unexpted error");

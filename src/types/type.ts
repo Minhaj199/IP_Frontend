@@ -1,3 +1,5 @@
+import type { Dispatch, SetStateAction } from "react";
+
 export interface Product {
   _id: string;
   name: string;
@@ -56,6 +58,16 @@ export type SearchOutput={
     productId: string;
     quantity: string;
     name:string
+}
+export type InvoiceResponse={
+  customer:{name:string,phone:string},
+  selectedItems:InvoiceItem[],
+  totalAmount:number
+  setErrors:Dispatch<SetStateAction<Record<string,string>>>
+  setItemErrors:Dispatch<SetStateAction<Record<string,string>>>,
+  setCustomer:Dispatch<SetStateAction<{name:string,phone:string}>>,
+  setSelectedItems:Dispatch<SetStateAction<InvoiceItem[]>>
+  updateStock:(id:string,quantity:number)=>void
 }
 
 export type StockFields='category'|'productId'|'quantity'|'source'|'remarks'|'product'

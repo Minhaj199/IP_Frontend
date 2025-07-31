@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { Invoice, Product, StockTransaction } from "./types/type";
 import { DashboardPage } from "./pages/Dashboard";
 import { InvoicesPage } from "./pages/InvoiceListing";
-import { InvoicePage } from "./pages/InvoiceCreation";
+import { InvoicePage } from "./pages/inoviceCreaion/InvoiceCreation";
 import { ProductsPage } from "./pages/ProductManagement";
 import { StockInPage } from "./pages/stockIn/StockIn";
 import { StockOutPage } from "./pages/stockOut";
