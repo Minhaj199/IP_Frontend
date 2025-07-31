@@ -7,14 +7,14 @@ import {
   SelectValue,
 } from "../../components/ui/select"
 
-import type { Invoice, InvoiceItem, Product } from "../../types/type";
+import type { InvoiceItem, Product } from "../../types/type";
 import { Plus, ShoppingCart, Trash2 } from "lucide-react";
-import { Navigation } from "../../components/navigation";
+import { Navigation } from "../../components/Navigation";
 import { enqueueSnackbar } from "notistack";
 
 import { fetchProduct, submitInvoice } from "../inoviceCreaion/operations";
 
-export const InvoicePage: React.FC<{products: Product[];onCreateInvoice: (invoice: Omit<Invoice, "id" | "createdAt">) => void;onUpdateStock: (productId: string, newStock: number) => void;}> = () => {
+export const InvoicePage: React.FC = () => {
   const [customer, setCustomer] = useState({ name: "", phone: "" });
   const [selectedItems, setSelectedItems] = useState<InvoiceItem[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});

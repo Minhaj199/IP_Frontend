@@ -1,7 +1,7 @@
 import react, { useEffect, useState } from "react";
 import type { Product } from "../types/type";
 import { Plus} from "lucide-react";
-import { Navigation } from "../components/navigation";
+import { Navigation } from "../components/Navigation";
 import { useLocation } from "react-router-dom";
 import { request } from "../utils/axiosInterceptor";
 import { useQuery } from "@tanstack/react-query";
@@ -353,7 +353,7 @@ export const ProductsPage: react.FC = () => {
                           <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
                             Out of Stock
                           </span>
-                        ) : product.stock < 10 ? (
+                        ) : product.stock < import.meta.env.STOCK_LEVEL ? (
                           <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
                             Low Stock
                           </span>

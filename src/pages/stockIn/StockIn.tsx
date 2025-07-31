@@ -1,6 +1,6 @@
 import { useEffect,  useState } from "react";
 import type { Product, StockFields, StockInputs } from "../../types/type";
-import { Navigation } from "../../components/navigation";
+import { Navigation } from "../../components/Navigation";
 import {  handleSubmit } from "./operation";
 
 

@@ -3,7 +3,6 @@ import {
   FileText, 
   List, 
   TrendingUp, 
-  TrendingDown, 
   Home,
 
 } from 'lucide-react';
@@ -12,12 +11,11 @@ import { useNavigate } from 'react-router-dom';
 export const Navigation: React.FC<{ currentPage: string; onPageChange?: (page: string) => void }> = ({ currentPage }) => {
   const navigate=useNavigate()
   const navItems = [
-    { key: 'home', label: 'Dashboard', icon: Home,route:'/'},
+    { key: 'home', label: 'Home', icon: Home,route:'/'},
     { key: 'products', label: 'Products', icon: Package,route:'/products' },
     { key: 'invoice', label: 'Create Invoice', icon: FileText,route:'/invoice' },
     { key: 'invoices', label: 'Invoice List', icon: List,route:'/invoices' },
     { key: 'stock-in', label: 'Stock In', icon: TrendingUp,route:'/stock-in' },
-    { key: 'stock-out', label: 'Stock Out', icon: TrendingDown,route:'/stock-out' }
   ];
 
   return (
