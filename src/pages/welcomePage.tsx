@@ -18,7 +18,7 @@ export const Welcome = () => {
       className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-500 to-indigo-700 text-white cursor-pointer transition duration-300 hover:brightness-110"
     >
       <div className="text-center px-6">
-        <h1 className="text-5xl font-bold mb-4">Welcome to Stock Inventory</h1>
+        <h1 className="text-5xl font-bold mb-4">Welcome to Inventory Pro</h1>
         <p className="text-xl opacity-90">Click anywhere to continue...</p>
       </div>
     </div>
