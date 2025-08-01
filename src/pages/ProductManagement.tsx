@@ -374,7 +374,7 @@ export const ProductsPage: react.FC = () => {
                             <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
                               Out of Stock
                             </span>
-                          ) : product.stock < import.meta.env.STOCK_LEVEL ? (
+                          ) : product.stock < 10 ? (
                             <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
                               Low Stock
                             </span>

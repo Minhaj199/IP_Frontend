@@ -54,5 +54,4 @@ pnpm install
 VITE_API_BASE_URL=https://your-api-domain.com/api
 
 # Optional: Port (if using custom server settings)
-VITE_BACKENT_URL=5173
-STOCK_LEVEL=
+VITE_BACKENT_URL=
