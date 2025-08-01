@@ -40,7 +40,6 @@ A minimal inventory management system built with **React**, **TypeScript**, **Ta
 
 ### Prerequisites
 
-- Node.js (>= 18)
 - pnpm / npm / yarn
 
 ```bash
@@ -52,6 +51,3 @@ pnpm install
 
 # Base URL for your backend API
 VITE_API_BASE_URL=https://your-api-domain.com/api
-
-# Optional: Port (if using custom server settings)
-VITE_BACKENT_URL=
