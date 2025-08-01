@@ -15,7 +15,7 @@ A minimal inventory management system built with **React**, **TypeScript**, **Ta
   - View list of past invoices
 
 - 🔁 **Stock Management**
-  - Handle **Stock In** and **Stock Out** entries
+  - Handle **Stock In**
   - Include remarks and logs for history tracking
 
 ---
