@@ -9,7 +9,7 @@ export const Welcome = () => {
   };
 
   useEffect(() => {
-    document.title = "Welcome | Inventory App";
+    document.title = "Welcome | Inventory Pro";
   }, []);
 
   return (
