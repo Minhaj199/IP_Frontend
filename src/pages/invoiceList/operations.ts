@@ -7,6 +7,7 @@ import { request } from "../../utils/axiosInterceptor";
     totalCount: number;
   }> => {
     try {
+ 
       const fetchData: { invoices: Invoice[],totalCount:number} = await request({ url: `/api/fetch-invoice?limit=${limit}&&page=${page}`});
     
       return fetchData;

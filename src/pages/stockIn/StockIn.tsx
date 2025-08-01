@@ -36,9 +36,6 @@ export const StockInPage: React.FC = () => {
         if (result.length) {
           setProducts(result);
         }
-        setFormData((prev) => ({ ...prev }));
-       
-        console.log(products);
       } catch (error) {}
     }
     fetchPrductName();
@@ -56,7 +53,6 @@ export const StockInPage: React.FC = () => {
       const data = products.find((elm) => {
         return elm._id===value;
       });
-      console.log(data)
       if (data) {
         updatedData = {
           category: data.category,
@@ -69,7 +65,6 @@ export const StockInPage: React.FC = () => {
         };
       } else {
       }
-      console.log(updatedData)
       setFormData({ ...updatedData });
     } else if (field === "category" && typeof value === "string") {
     

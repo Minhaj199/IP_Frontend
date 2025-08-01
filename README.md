@@ -1,69 +1,58 @@
-# React + TypeScript + Vite
+# 🧾 Inventory Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A minimal inventory management system built with **React**, **TypeScript**, **Tailwind CSS**, and **ShadCN/MUI**. This app allows you to manage products, invoices, and stock operations efficiently.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## Expanding the ESLint configuration
+- 📦 **Product Management**
+  - Add new products with category, unit, and ID
+  - View and manage existing product list
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- 🧾 **Invoice System**
+  - Create new invoices with multiple products
+  - View list of past invoices
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- 🔁 **Stock Management**
+  - Handle **Stock In** and **Stock Out** entries
+  - Include remarks and logs for history tracking
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🛠️ Tech Stack
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+| Category | Library |
+|---------|---------|
+| **UI** | React, Tailwind CSS v4, MUI, Lucide Icons |
+| **Styling** | @emotion, styled-components, Tailwind Merge |
+| **Routing** | React Router DOM v7 |
+| **Forms/UI** | Radix UI (`react-select`, `alert-dialog`, etc.), react-select |
+| **State/Fetching** | React Query (`@tanstack/react-query`), Axios |
+| **Type Safety** | TypeScript |
+| **Notifications** | Notistack |
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 📂 Project Structure (Overview)
+
+## 🧑‍💻 Getting Started
+
+### Prerequisites
+
+- Node.js (>= 18)
+- pnpm / npm / yarn
+
+```bash
+git clone https://github.com/Minhaj199/IP_Frontend.git
+cd IP_Frontend
+pnpm install
+
+# .env
+
+# Base URL for your backend API
+VITE_API_BASE_URL=https://your-api-domain.com/api
+
+# Optional: Port (if using custom server settings)
+VITE_BACKENT_URL=5173
+STOCK_LEVEL=

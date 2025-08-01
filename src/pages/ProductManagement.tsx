@@ -1,6 +1,6 @@
 import react, { useEffect, useState } from "react";
 import type { Product } from "../types/type";
-import { Plus} from "lucide-react";
+import { Plus } from "lucide-react";
 import { Navigation } from "../components/Navigation";
 import { useLocation } from "react-router-dom";
 import { request } from "../utils/axiosInterceptor";
@@ -23,7 +23,6 @@ export const ProductsPage: react.FC = () => {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-
   const fetchData = async (): Promise<{
     products: Product[];
     totalCount: number;
@@ -33,6 +32,16 @@ export const ProductsPage: react.FC = () => {
         await request({ url: `/api/stock-list?limit=${limit}&&page=${page}` });
       return fetchData;
     } catch (error) {
+      if(error instanceof Error){
+
+        enqueueSnackbar(error.message||"unexped error", {
+             variant: "error",
+             anchorOrigin: {
+               vertical: "bottom",
+               horizontal: "right",
+             },
+           });
+      }
       return { products: [], totalCount: 0 };
     }
   };
@@ -44,7 +53,8 @@ export const ProductsPage: react.FC = () => {
     queryKey: ["products", page],
     queryFn: () => fetchData(),
   });
-  
+
+
   const totalPage = Math.ceil((data?.totalCount || 0) / limit);
 
   useEffect(() => {
@@ -56,11 +66,13 @@ export const ProductsPage: react.FC = () => {
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.name.trim()) newErrors.name = 'Product name is required';
-    if (!formData.category.trim()) newErrors.category = 'Category is required';
-    if (!formData.unit.trim()) newErrors.unit = 'Unit is required';
-    if (!formData.initialStock || parseInt(formData.initialStock) < 0) newErrors.initialStock = 'Valid initial stock is required';
-    if (!formData.price || parseFloat(formData.price) <= 0) newErrors.price = 'Valid price is required';
+    if (!formData.name.trim()) newErrors.name = "Product name is required";
+    if (!formData.category.trim()) newErrors.category = "Category is required";
+    if (!formData.unit.trim()) newErrors.unit = "Unit is required";
+    if (!formData.initialStock || parseInt(formData.initialStock) < 0)
+      newErrors.initialStock = "Valid initial stock is required";
+    if (!formData.price || parseFloat(formData.price) <= 0)
+      newErrors.price = "Valid price is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -70,10 +82,11 @@ export const ProductsPage: react.FC = () => {
     e.preventDefault();
     if (validateForm()) {
       try {
-        const result = await request({
+        const result:{success:boolean} = await request({
           url: "/api/add-product",
           method: "post",
-          data: { ...formData },
+          data:formData
+          
         });
         setFormData({
           name: "",
@@ -85,7 +98,7 @@ export const ProductsPage: react.FC = () => {
         setShowForm(false);
         setErrors({});
 
-        if (result) {
+        if (result.success) {
           enqueueSnackbar("Product added successfully", {
             variant: "success",
             anchorOrigin: {
@@ -96,14 +109,21 @@ export const ProductsPage: react.FC = () => {
           refetch();
         }
       } catch (error: any) {
-        if ("errorType" in error&&'result' in error) {
+        if ("errorType" in error && "result" in error) {
+           enqueueSnackbar(error.message || "internal server error", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "right",
+            },
+          });
           if (
             error.errorType === "fieldError" &&
             error.result !== null &&
             typeof error === "object"
           )
             setErrors(error.result as Record<string, string>);
-            return
+          return;
         } else if (
           error.errorType === "fieldError" &&
           error.result !== null &&
@@ -116,10 +136,10 @@ export const ProductsPage: react.FC = () => {
               horizontal: "right",
             },
           });
-          return
-        } 
-        if('message' in error){
-             enqueueSnackbar(error.message || "internal server error", {
+          return;
+        }
+        if ("message" in error) {
+          enqueueSnackbar(error.message || "internal server error", {
             variant: "error",
             anchorOrigin: {
               vertical: "bottom",
@@ -324,47 +344,48 @@ export const ProductsPage: react.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {Array.isArray(data?.products)&&data?.products.map((product) => (
-                    <tr key={product._id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="font-medium text-gray-900">
-                          {product.name}
-                        </div>
-                      </td>
+                  {Array.isArray(data?.products) &&
+                    data?.products.map((product) => (
+                      <tr key={product._id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="font-medium text-gray-900">
+                            {product.name}
+                          </div>
+                        </td>
 
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-500">
-                        {product.category}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-500">
-                        {product.unit}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-gray-900">{product.stock}</span>
-                        <span className="text-gray-500 text-sm">
-                          {" "}
-                          / {product.initialStock}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-900">
-                        ₹{product.price.toLocaleString()}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {product.stock === 0 ? (
-                          <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
-                            Out of Stock
+                        <td className="px-6 py-4 whitespace-nowrap text-gray-500">
+                          {product.category}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-gray-500">
+                          {product.unit}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className="text-gray-900">{product.stock}</span>
+                          <span className="text-gray-500 text-sm">
+                            {" "}
+                            / {product.initialStock}
                           </span>
-                        ) : product.stock < import.meta.env.STOCK_LEVEL ? (
-                          <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                            Low Stock
-                          </span>
-                        ) : (
-                          <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
-                            In Stock
-                          </span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-gray-900">
+                          ₹{product.price.toLocaleString()}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {product.stock === 0 ? (
+                            <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                              Out of Stock
+                            </span>
+                          ) : product.stock < import.meta.env.STOCK_LEVEL ? (
+                            <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                              Low Stock
+                            </span>
+                          ) : (
+                            <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                              In Stock
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>

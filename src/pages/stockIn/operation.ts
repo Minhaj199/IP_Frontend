@@ -18,6 +18,7 @@ const validateForm = (
   return Object.keys(newErrors).length === 0;
 };
 
+
 export const handleSubmit = async (
   e: React.FormEvent,
   formData: StockInputs,
@@ -31,8 +32,9 @@ export const handleSubmit = async (
         const id = encodeURIComponent(formData.productId);
         const updateData: { success: true } = await request({
           url: "/api/stock-in/" + id,
-          method: "put",
-          data: formData,
+          method: "patch",
+          // data: formData,
+          data:formData
         });
         if (updateData.success) {
           setFormData({
@@ -62,9 +64,15 @@ export const handleSubmit = async (
           });
         }
       } catch (error: any) {
-        if ("errorType" in error && "result" in error) {
-          if (
-            error.errorType === "fieldError" &&
+        if ("errorType" in error && "result" in error)
+           enqueueSnackbar(error.message || "bad Request", {
+              variant: "error",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "right",
+              },
+            });
+           {if (error.errorType === "fieldError" &&
             error.result !== null &&
             typeof error === "object"
           ) {

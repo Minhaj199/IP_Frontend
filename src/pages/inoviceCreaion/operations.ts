@@ -1,6 +1,7 @@
 import { enqueueSnackbar } from "notistack";
 import type { InvoiceResponse, Product } from "../../types/type";
 import { request } from "../../utils/axiosInterceptor";
+import type { Dispatch, SetStateAction } from "react";
 
 export type ProductName = {
   _id: string;
@@ -80,18 +81,20 @@ export const submitInvoice = async ({
   }
 };
 
-/////////////// fetching realtime stock////////////
-export const fetchStock = async (id: string) => {
-  try {
-    const fetch: { stock: number } = await request({
-      url: "/api/fetch-stock/" + id,
-    });
-    if (fetch) {
-      return fetch;
-    } else {
-      return null;
-    }
-  } catch (error) {
-    return null;
-  }
-};
+
+ export const validateCustomer = (customer:{name:string,phone:string},setErrors:Dispatch<SetStateAction<Record<string,string>>>) => {
+    const newErrors: Record<string, string> = {};
+    if (!customer.name.trim())
+      newErrors.customerName = "Customer name is required";
+    if (customer.name.trim().length > 15)
+      newErrors.customerName = "Maximum charecter limit 15";
+    if (customer.name.trim().length <3)
+      newErrors.customerName = "Insert aleast 3 letters";
+    
+    if (!customer.phone.trim())
+      newErrors.customerPhone = "Customer phone is required";
+      if (customer.phone.trim().length<10||customer.phone.trim().length>14)
+      newErrors.customerPhone = "Enter a valid number";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };

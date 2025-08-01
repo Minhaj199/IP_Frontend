@@ -12,7 +12,7 @@ import { Plus, ShoppingCart, Trash2 } from "lucide-react";
 import { Navigation } from "../../components/Navigation";
 import { enqueueSnackbar } from "notistack";
 
-import { fetchProduct, submitInvoice } from "../inoviceCreaion/operations";
+import { fetchProduct, submitInvoice, validateCustomer } from "../inoviceCreaion/operations";
 
 export const InvoicePage: React.FC = () => {
   const [customer, setCustomer] = useState({ name: "", phone: "" });
@@ -21,22 +21,6 @@ export const InvoicePage: React.FC = () => {
   const [itemErrors, setItemErrors] = useState<Record<number, string>>({});
   const [products,setProducts]=useState<Product[]>([])
 
-  const validateCustomer = () => {
-    const newErrors: Record<string, string> = {};
-    if (!customer.name.trim())
-      newErrors.customerName = "Customer name is required";
-    if (customer.name.trim().length > 15)
-      newErrors.customerName = "Maximum charecter limit 15";
-    if (customer.name.trim().length <3)
-      newErrors.customerName = "Insert aleast 3 letters";
-    
-    if (!customer.phone.trim())
-      newErrors.customerPhone = "Customer phone is required";
-      if (customer.phone.trim().length<10||customer.phone.trim().length>14)
-      newErrors.customerPhone = "Enter a valid number";
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
  
   const addItem = () => {setSelectedItems([...selectedItems,{productId: "",productName: "",quantity: 0,price: 0,total: 0,},])};
 
@@ -133,7 +117,7 @@ const updateStock=(id:string,quantity:number)=>{
     /////////////////// submitting data here/////////////
     e.preventDefault();
     ///////////// customer validation//////////
-    const isCustomerValid = validateCustomer();
+    const isCustomerValid = validateCustomer(customer,setErrors);
     ///////////// validation//////////
     const areItemsValid = validateItems();
 

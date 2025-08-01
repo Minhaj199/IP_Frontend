@@ -39,7 +39,7 @@ export const InvoicesPage: React.FC = () => {
 const id=encodeURIComponent(invoice._id)
       try {
         setIsLoading(true)
-        const result:{success:boolean}=await request({url:`/api/delete-invoice/${id}`,method:'delete',data:invoice})
+        const result:{success:boolean}=await request({url:`/api/delete-invoice/${id}`,method:'delete',data:invoice.items})
         if(result.success){
           refetch()
           enqueueSnackbar("invoice deleted", {
